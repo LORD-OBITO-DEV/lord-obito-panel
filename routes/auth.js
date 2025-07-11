@@ -1,61 +1,53 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 // Page login
 router.get('/login', (req, res) => {
-  res.render('auth/login.html', { error: null });
+  res.render('auth/login.html');
 });
 
 // POST login
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username: username.toLowerCase() });
-  if (!user) return res.render('auth/login.html', { error: 'Utilisateur non trouvé' });
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
 
-  const valid = await user.validatePassword(password);
-  if (!valid) return res.render('auth/login.html', { error: 'Mot de passe incorrect' });
+    if (!user) return res.render('auth/login.html', { error: 'Utilisateur non trouvé' });
 
-  // Save user in session (sans password hash)
-  req.session.user = {
-    id: user._id,
-    username: user.username,
-    isAdmin: user.isAdmin
-  };
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.render('auth/login.html', { error: 'Mot de passe incorrect' });
 
-  if (user.isAdmin) {
-    res.redirect('/admin/dashboard');
-  } else {
-    res.redirect('/user/dashboard');
+    req.session.user = { _id: user._id, username: user.username, isAdmin: user.isAdmin };
+    res.redirect(user.isAdmin ? '/admin/dashboard' : '/dashboard');
+  } catch (err) {
+    res.status(500).send('Erreur serveur');
   }
 });
 
 // Logout
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/auth/login');
+    res.redirect('/login');
   });
 });
 
-// Route register (uniquement pour création admin via URL secrète)
+// Register Admin (optional)
 router.get('/register-admin', (req, res) => {
-  res.render('auth/register-admin.html', { error: null });
+  res.render('auth/register-admin.html');
 });
 
 router.post('/register-admin', async (req, res) => {
-  const { username, email, password, secretKey } = req.body;
-
-  const ADMIN_SECRET = process.env.ADMIN_SECRET || 'change_me';
-
-  if (secretKey !== ADMIN_SECRET) return res.render('auth/register-admin.html', { error: 'Clé secrète invalide' });
-
-  if (await User.findOne({ username })) return res.render('auth/register-admin.html', { error: 'Utilisateur déjà existant' });
-
-  const user = new User({ username, email, isAdmin: true, storageQuotaGB: 0, cpuQuotaPercent: 100, panelDurationDays: 3650 });
-  await user.setPassword(password);
-  await user.save();
-
-  res.redirect('/auth/login');
+  try {
+    const { username, password } = req.body;
+    const hashed = await bcrypt.hash(password, 10);
+    const user = new User({ username, password: hashed, isAdmin: true });
+    await user.save();
+    res.redirect('/login');
+  } catch (err) {
+    res.status(500).send('Erreur serveur');
+  }
 });
 
 module.exports = router;
