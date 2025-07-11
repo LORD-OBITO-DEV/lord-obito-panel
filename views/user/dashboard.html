@@ -1,1 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tableau de bord - LORD OBITO PANEL</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Bienvenue, <%= user.username %></h1>
 
+    <section class="quota-bar">
+      <h3>Quota de stockage</h3>
+      <div class="bar">
+        <div class="used" style="width: <%= Math.min((used / (storageLimit * 1024 * 1024 * 1024)) * 100, 100) %>%"></div>
+      </div>
+      <p><%= (used / (1024 * 1024 * 1024)).toFixed(2) %> Go utilisé sur <%= storageLimit %> Go</p>
+    </section>
+
+    <section class="files-list">
+      <h3>Vos fichiers récents</h3>
+      <% if (files.length === 0) { %>
+        <p>Aucun fichier uploadé.</p>
+      <% } else { %>
+        <table>
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Taille</th>
+              <th>Date d'upload</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% files.forEach(file => { %>
+              <tr>
+                <td><%= file.name %></td>
+                <td><%= (file.size / (1024 * 1024)).toFixed(2) %> Mo</td>
+                <td><%= file.uploadDate.toLocaleDateString('fr-FR') %></td>
+                <td>
+                  <a href="/files/download/<%= file._id %>">Télécharger</a> |
+                  <a href="/files/delete/<%= file._id %>" onclick="return confirm('Supprimer ce fichier ?')">Supprimer</a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </section>
+  </div>
+</body>
+      </html>
