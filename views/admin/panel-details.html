@@ -1,1 +1,68 @@
+<%- include('../partials/header.html') %>
 
+<div class="container">
+  <h2>Détails du panneau</h2>
+
+  <table>
+    <tr>
+      <th>Nom d'utilisateur</th>
+      <td><%= panel.username %></td>
+    </tr>
+    <tr>
+      <th>Email</th>
+      <td><%= panel.email %></td>
+    </tr>
+    <tr>
+      <th>Stockage attribué</th>
+      <td><%= panel.storage === -1 ? 'Illimité' : panel.storage + ' Go' %></td>
+    </tr>
+    <tr>
+      <th>CPU attribué</th>
+      <td><%= panel.cpu === -1 ? 'Illimité' : panel.cpu + ' %' %></td>
+    </tr>
+    <tr>
+      <th>Durée</th>
+      <td><%= panel.duration %></td>
+    </tr>
+    <tr>
+      <th>Date de création</th>
+      <td><%= panel.createdAt.toLocaleString() %></td>
+    </tr>
+  </table>
+
+  <form action="/admin/delete/<%= panel._id %>" method="POST" onsubmit="return confirm('Supprimer ce panneau ?');">
+    <button type="submit" class="btn">🗑️ Supprimer ce panneau</button>
+  </form>
+</div>
+
+<style>
+  table {
+    margin-top: 20px;
+  }
+
+  th {
+    background-color: #2b2b2b;
+    width: 200px;
+  }
+
+  td {
+    background-color: #1a1a1a;
+  }
+
+  form {
+    margin-top: 30px;
+  }
+
+  .btn {
+    background-color: #f05858;
+    padding: 10px 20px;
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    background-color: #d94141;
+  }
+</style>
