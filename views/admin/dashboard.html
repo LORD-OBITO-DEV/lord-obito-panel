@@ -1,39 +1,56 @@
 <%- include('../partials/header.html') %>
 
 <div class="container">
-  <h2>Tableau de bord administrateur</h2>
+  <h2>Tableau de bord Admin</h2>
 
-  <% if (message) { %>
-    <p class="alert"><%= message %></p>
-  <% } %>
+  <div class="stats">
+    <div class="stat-card">
+      <h3>👥 Utilisateurs</h3>
+      <p><%= stats.totalUsers %></p>
+    </div>
+    <div class="stat-card">
+      <h3>🗃️ Panneaux actifs</h3>
+      <p><%= stats.totalPanels %></p>
+    </div>
+    <div class="stat-card">
+      <h3>💾 Stockage utilisé</h3>
+      <p><%= (stats.totalUsedStorage / (1024 * 1024 * 1024)).toFixed(2) %> Go</p>
+    </div>
+    <div class="stat-card">
+      <h3>📅 Dernier utilisateur créé</h3>
+      <p><%= stats.lastUser ? stats.lastUser.username : 'N/A' %></p>
+    </div>
+  </div>
 
-  <a href="/admin/create-panel" class="btn">Créer un nouveau panneau</a>
+  <div class="actions">
+    <a href="/admin/panels" class="btn">📋 Voir les panneaux</a>
+    <a href="/admin/users" class="btn">👤 Gérer les utilisateurs</a>
+    <a href="/admin/create" class="btn">➕ Créer un panneau</a>
+  </div>
+</div>
 
-  <h3>Liste des panneaux</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Nom</th>
-        <th>Stockage (Go)</th>
-        <th>CPU</th>
-        <th>Durée</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% panels.forEach(panel => { %>
-        <tr>
-          <td><%= panel.panelName %></td>
-          <td><%= panel.storageQuota === 'unlimited' ? 'Illimité' : panel.storageQuota %></td>
-          <td><%= panel.cpu === 'unlimited' ? 'Illimité' : panel.cpu %></td>
-          <td><%= panel.duration %> jours</td>
-          <td>
-            <form action="/admin/delete-panel/<%= panel._id %>" method="POST" onsubmit="return confirm('Supprimer ce panneau ?')">
-              <button type="submit">Supprimer</button>
-            </form>
-          </td>
-        </tr>
-      <% }) %>
-    </tbody>
-  </table>
-      </div>
+<style>
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .stat-card {
+    flex: 1 1 200px;
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+    text-align: center;
+  }
+  .stat-card h3 {
+    color: #f05858;
+  }
+  .actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+</style>
