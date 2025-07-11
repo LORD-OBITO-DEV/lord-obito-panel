@@ -1,1 +1,68 @@
+<%- include('../partials/header.html') %>
 
+<div class="container">
+  <h2>Liste des panneaux</h2>
+
+  <% if (panels.length === 0) { %>
+    <p>Aucun panneau créé pour l’instant.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom d'utilisateur</th>
+          <th>Stockage</th>
+          <th>CPU</th>
+          <th>Durée</th>
+          <th>Créé le</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% panels.forEach(panel => { %>
+          <tr>
+            <td><%= panel.username %></td>
+            <td><%= panel.storage === -1 ? 'Illimité' : panel.storage + ' Go' %></td>
+            <td><%= panel.cpu === -1 ? 'Illimité' : panel.cpu + ' %' %></td>
+            <td><%= panel.duration %></td>
+            <td><%= panel.createdAt.toLocaleDateString() %></td>
+            <td>
+              <a href="/admin/panel/<%= panel._id %>">📄 Détails</a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  th, td {
+    border: 1px solid #333;
+    padding: 10px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #2b2b2b;
+  }
+
+  td {
+    background-color: #1a1a1a;
+  }
+
+  a {
+    color: #00ff88;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
