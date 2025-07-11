@@ -1,1 +1,20 @@
+<%- include('../partials/header.html') %>
 
+<div class="container">
+  <h2>Détails de l'utilisateur</h2>
+
+  <p><strong>Nom d'utilisateur :</strong> <%= user.username %></p>
+  <p><strong>Stockage attribué :</strong> <%= user.storageQuota %> Go</p>
+  <p><strong>Stockage utilisé :</strong> <%= (used / 1024 / 1024 / 1024).toFixed(2) %> Go</p>
+  <p><strong>CPU :</strong> <%= user.cpu %></p>
+  <p><strong>Durée :</strong> <%= user.expirationDate ? user.expirationDate.toLocaleDateString() : 'Illimité' %></p>
+
+  <hr>
+
+  <form action="/admin/users/<%= user._id %>/delete" method="POST" onsubmit="return confirm('Supprimer cet utilisateur ?')">
+    <button type="submit" style="background-color:#d9534f;">Supprimer l’utilisateur</button>
+  </form>
+
+  <br>
+  <a href="/admin/users" class="btn">⬅️ Retour à la liste</a>
+</div>
