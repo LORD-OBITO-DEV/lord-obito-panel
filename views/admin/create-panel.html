@@ -6,29 +6,38 @@
   <% if (error) { %>
     <p class="alert"><%= error %></p>
   <% } %>
-  <% if (success) { %>
-    <p class="alert" style="color: #0f0;"><%= success %></p>
-  <% } %>
 
   <form action="/admin/create-panel" method="POST">
-    <label>Nom d'utilisateur :</label>
-    <input type="text" name="username" required>
+    <label for="panelName">Nom du panneau :</label>
+    <input type="text" id="panelName" name="panelName" required>
 
-    <label>Mot de passe :</label>
-    <input type="password" name="password" required>
+    <label for="panelPassword">Mot de passe du panneau :</label>
+    <input type="password" id="panelPassword" name="panelPassword" required>
 
-    <label>Stockage (Go ou "illimité") :</label>
-    <input type="text" name="storage" placeholder="ex: 5 ou illimité" required>
+    <label for="storageQuota">Quota de stockage (Go) :</label>
+    <select id="storageQuota" name="storageQuota" required>
+      <option value="1">1 Go</option>
+      <option value="5">5 Go</option>
+      <option value="10">10 Go</option>
+      <option value="20">20 Go</option>
+      <option value="unlimited">Illimité</option>
+    </select>
 
-    <label>CPU :</label>
-    <input type="text" name="cpu" placeholder="ex: 1 vCPU, 2 vCPU" required>
+    <label for="cpu">CPU :</label>
+    <select id="cpu" name="cpu" required>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="4">4</option>
+      <option value="8">8</option>
+      <option value="unlimited">Illimité</option>
+    </select>
 
-    <label>Durée :</label>
-    <select name="duration" required>
-      <option value="7j">7 jours</option>
-      <option value="1mois">1 mois</option>
-      <option value="3mois">3 mois</option>
-      <option value="illimité">Illimité</option>
+    <label for="duration">Durée du panneau :</label>
+    <select id="duration" name="duration" required>
+      <option value="7">7 jours</option>
+      <option value="30">1 mois</option>
+      <option value="90">3 mois</option>
+      <option value="365">1 an</option>
     </select>
 
     <button type="submit">Créer le panneau</button>
