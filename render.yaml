@@ -1,1 +1,27 @@
-
+services:
+  - type: web
+    name: lord-obito-panel
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: npm install
+    startCommand: node app.js
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: "10000"          # ou laisse Render gérer automatiquement
+      - key: MONGO_URI
+        fromSecret: MONGO_URI_SECRET  # ou directement la valeur si pas de secret
+      - key: SESSION_SECRET
+        fromSecret: SESSION_SECRET
+      - key: STORAGE_LIMIT_DEFAULT
+        value: "5"
+      - key: ADMIN_USERNAME
+        value: "admin"
+      - key: ADMIN_PASSWORD
+        value: "Obitoadmin"
+secrets:
+  - name: MONGO_URI_SECRET
+    value: "mongodb+srv://Admin:QWERTY304@lord-obito-panel.bfkqb5q.mongodb.net/?retryWrites=true&w=majority&appName=Lord-Obito-Panel"
+  - name: SESSION_SECRET
+    value: "Ely304"
