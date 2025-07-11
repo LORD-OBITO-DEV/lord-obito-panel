@@ -7,22 +7,22 @@
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
-  <div class="container">
-    <h2>Connexion</h2>
+  {% include "../partials/header.html" %}
 
-    <% if (error) { %>
-      <p class="alert"><%= error %></p>
-    <% } %>
+  <div class="login-container" style="max-width: 400px; margin: 40px auto; padding: 20px; background-color: #222; border-radius: 8px;">
+    <div style="text-align: center; margin-bottom: 20px;">
+      <img src="/uploads/logo.png" alt="Logo" style="height: 80px;">
+    </div>
 
     <form action="/auth/login" method="POST">
-      <label for="username">Nom d’utilisateur :</label>
+      <label for="username">Nom d'utilisateur</label>
       <input type="text" id="username" name="username" required />
 
-      <label for="password">Mot de passe :</label>
+      <label for="password">Mot de passe</label>
       <input type="password" id="password" name="password" required />
 
       <button type="submit">Se connecter</button>
     </form>
   </div>
 </body>
-    </html>
+</html>
