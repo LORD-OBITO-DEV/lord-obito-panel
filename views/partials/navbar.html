@@ -1,1 +1,14 @@
-
+<nav>
+  <a href="/">Accueil</a>
+  {{#if user}}
+    <a href="/dashboard">Dashboard</a>
+    <a href="/settings">Paramètres</a>
+    <a href="/logout">Déconnexion</a>
+    {{#if user.isAdmin}}
+      <a href="/admin/dashboard">Admin</a>
+    {{/if}}
+  {{else}}
+    <a href="/login">Connexion</a>
+    <a href="/register">Inscription</a>
+  {{/if}}
+</nav>
