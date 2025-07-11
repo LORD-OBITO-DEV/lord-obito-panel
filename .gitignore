@@ -1,1 +1,32 @@
+# Node modules
+node_modules/
 
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environnement
+.env
+
+# Dossiers de build ou temporaires
+dist/
+build/
+.tmp/
+
+# Fichiers uploadés (optionnel, si tu veux ignorer les fichiers uploadés)
+public/uploads/
+
+# OS fichiers système
+.DS_Store
+Thumbs.db
+
+# Cache IDE
+.vscode/
+.idea/
+
+# Autres
+*.bak
+*.swp
