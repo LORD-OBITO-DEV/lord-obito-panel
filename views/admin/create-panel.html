@@ -1,1 +1,36 @@
+<%- include('../partials/header.html') %>
 
+<div class="container">
+  <h2>Créer un nouveau panneau</h2>
+
+  <% if (error) { %>
+    <p class="alert"><%= error %></p>
+  <% } %>
+  <% if (success) { %>
+    <p class="alert" style="color: #0f0;"><%= success %></p>
+  <% } %>
+
+  <form action="/admin/create-panel" method="POST">
+    <label>Nom d'utilisateur :</label>
+    <input type="text" name="username" required>
+
+    <label>Mot de passe :</label>
+    <input type="password" name="password" required>
+
+    <label>Stockage (Go ou "illimité") :</label>
+    <input type="text" name="storage" placeholder="ex: 5 ou illimité" required>
+
+    <label>CPU :</label>
+    <input type="text" name="cpu" placeholder="ex: 1 vCPU, 2 vCPU" required>
+
+    <label>Durée :</label>
+    <select name="duration" required>
+      <option value="7j">7 jours</option>
+      <option value="1mois">1 mois</option>
+      <option value="3mois">3 mois</option>
+      <option value="illimité">Illimité</option>
+    </select>
+
+    <button type="submit">Créer le panneau</button>
+  </form>
+  </div>
