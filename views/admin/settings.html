@@ -1,1 +1,61 @@
+<%- include('../partials/header.html') %>
 
+<div class="container">
+  <h2>Paramètres administrateur</h2>
+
+  <% if (error) { %>
+    <p class="alert"><%= error %></p>
+  <% } %>
+
+  <% if (success) { %>
+    <p class="success"><%= success %></p>
+  <% } %>
+
+  <form action="/admin/settings" method="POST">
+    <label for="username">Nom d’utilisateur :</label>
+    <input type="text" id="username" name="username" value="<%= admin.username %>" required>
+
+    <label for="password">Nouveau mot de passe :</label>
+    <input type="password" id="password" name="password" placeholder="Laissez vide pour garder l’actuel">
+
+    <button type="submit">Enregistrer</button>
+  </form>
+</div>
+
+<style>
+  .alert {
+    color: #ff6b6b;
+    background-color: #2a0000;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+  }
+  
+  .success {
+    color: #00cc66;
+    background-color: #0a2610;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    background-color: #222;
+    border: 1px solid #555;
+    border-radius: 6px;
+    color: #eee;
+  }
+
+  button {
+    margin-top: 20px;
+  }
+</style>
