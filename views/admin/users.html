@@ -1,0 +1,57 @@
+<%- include('../partials/header.html') %>
+
+<div class="container">
+  <h2>👥 Liste des utilisateurs</h2>
+
+  <% if (users.length === 0) { %>
+    <p>Aucun utilisateur enregistré.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom d'utilisateur</th>
+          <th>Email</th>
+          <th>Stockage</th>
+          <th>CPU</th>
+          <th>Expire le</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(u => { %>
+          <tr>
+            <td><%= u.username %></td>
+            <td><%= u.email || '—' %></td>
+            <td>
+              <% if (u.storageLimit === -1) { %>
+                Illimité
+              <% } else { %>
+                <%= u.storageLimit %> Go
+              <% } %>
+            </td>
+            <td>
+              <% if (u.cpu === -1) { %>
+                Illimité
+              <% } else { %>
+                <%= u.cpu %> %
+              <% } %>
+            </td>
+            <td>
+              <% if (u.expiresAt) { %>
+                <%= new Date(u.expiresAt).toLocaleDateString() %>
+              <% } else { %>
+                —
+              <% } %>
+            </td>
+            <td>
+              <a href="/admin/users/<%= u._id %>" class="btn">Voir</a>
+              <form action="/admin/users/<%= u._id %>?_method=DELETE" method="POST" style="display:inline;">
+                <button type="submit" onclick="return confirm('Supprimer cet utilisateur ?')">Supprimer</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+  </div>
