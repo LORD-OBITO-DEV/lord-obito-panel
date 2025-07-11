@@ -1,52 +1,37 @@
 <%- include('../partials/header.html') %>
 
 <div class="container">
-  <h2>👥 Liste des utilisateurs</h2>
+  <h2>Liste des utilisateurs</h2>
 
   <% if (users.length === 0) { %>
-    <p>Aucun utilisateur enregistré.</p>
+    <p>Aucun utilisateur trouvé.</p>
   <% } else { %>
     <table>
       <thead>
         <tr>
-          <th>Nom d'utilisateur</th>
-          <th>Email</th>
-          <th>Stockage</th>
+          <th>Nom d’utilisateur</th>
+          <th>Stockage (Go)</th>
           <th>CPU</th>
-          <th>Expire le</th>
+          <th>Durée</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <% users.forEach(u => { %>
+        <% users.forEach(user => { %>
           <tr>
-            <td><%= u.username %></td>
-            <td><%= u.email || '—' %></td>
+            <td><%= user.username %></td>
+            <td><%= user.storageQuota %></td>
+            <td><%= user.cpu %></td>
             <td>
-              <% if (u.storageLimit === -1) { %>
-                Illimité
-              <% } else { %>
-                <%= u.storageLimit %> Go
-              <% } %>
+              <%= user.expirationDate 
+                  ? new Date(user.expirationDate).toLocaleDateString() 
+                  : 'Illimité' %>
             </td>
             <td>
-              <% if (u.cpu === -1) { %>
-                Illimité
-              <% } else { %>
-                <%= u.cpu %> %
-              <% } %>
-            </td>
-            <td>
-              <% if (u.expiresAt) { %>
-                <%= new Date(u.expiresAt).toLocaleDateString() %>
-              <% } else { %>
-                —
-              <% } %>
-            </td>
-            <td>
-              <a href="/admin/users/<%= u._id %>" class="btn">Voir</a>
-              <form action="/admin/users/<%= u._id %>?_method=DELETE" method="POST" style="display:inline;">
-                <button type="submit" onclick="return confirm('Supprimer cet utilisateur ?')">Supprimer</button>
+              <a href="/admin/users/<%= user._id %>">📝 Détails</a>
+              |
+              <form action="/admin/users/<%= user._id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('Supprimer cet utilisateur ?')">
+                <button type="submit">🗑️ Supprimer</button>
               </form>
             </td>
           </tr>
@@ -54,4 +39,7 @@
       </tbody>
     </table>
   <% } %>
+
+  <br>
+  <a href="/admin/create" class="btn">➕ Créer un nouveau panneau</a>
   </div>
