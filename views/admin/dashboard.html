@@ -1,1 +1,39 @@
+<%- include('../partials/header.html') %>
 
+<div class="container">
+  <h2>Tableau de bord administrateur</h2>
+
+  <% if (message) { %>
+    <p class="alert"><%= message %></p>
+  <% } %>
+
+  <a href="/admin/create-panel" class="btn">Créer un nouveau panneau</a>
+
+  <h3>Liste des panneaux</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Stockage (Go)</th>
+        <th>CPU</th>
+        <th>Durée</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% panels.forEach(panel => { %>
+        <tr>
+          <td><%= panel.panelName %></td>
+          <td><%= panel.storageQuota === 'unlimited' ? 'Illimité' : panel.storageQuota %></td>
+          <td><%= panel.cpu === 'unlimited' ? 'Illimité' : panel.cpu %></td>
+          <td><%= panel.duration %> jours</td>
+          <td>
+            <form action="/admin/delete-panel/<%= panel._id %>" method="POST" onsubmit="return confirm('Supprimer ce panneau ?')">
+              <button type="submit">Supprimer</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+      </div>
