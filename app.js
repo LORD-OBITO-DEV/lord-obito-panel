@@ -1,78 +1,66 @@
-const express = require('express');
-const session = require('express-session');
-const mongoose = require('mongoose');
-const path = require('path');
-const MongoStore = require('connect-mongo');
 require('dotenv').config();
-
+const express = require('express');
+const path = require('path');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const expressLayouts = require('express-ejs-layouts');
 const app = express();
-const PORT = process.env.PORT || 10000;
 
-// Connexion à MongoDB
+// Connexion MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('✅ Connecté à MongoDB');
-}).catch((err) => {
-  console.error('❌ Erreur MongoDB :', err);
-});
+  useUnifiedTopology: true
+}).then(() => console.log('✅ Connecté à MongoDB'))
+  .catch(err => console.error('❌ Erreur MongoDB:', err));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Sessions
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'default_secret',
   resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+  saveUninitialized: false
 }));
 
-// Configuration du moteur de template
-app.engine('html', require('ejs').renderFile); // supporte les .html avec EJS
+// Layouts et moteur de vues HTML via EJS
+app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, 'views'));
+app.use(expressLayouts);
 
-// Fichiers statiques (public/)
-app.use('/css', express.static(path.join(__dirname, 'public/css')));
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
-app.use('/logo.png', express.static(path.join(__dirname, 'public/logo.png')));
-
-// Routes
+// Définition des routes
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/user');
 const panelRoutes = require('./routes/panel');
 
-app.use('/', authRoutes);
-app.use('/admin', adminRoutes);
-app.use('/user', userRoutes);
-app.use('/panel', panelRoutes);
+app.use('/', authRoutes);            // Routes d'authentification
+app.use('/admin', adminRoutes);     // Routes administrateur
+app.use('/user', userRoutes);       // Routes utilisateur
+app.use('/panel', panelRoutes);     // Routes panneau (upload, etc.)
 
-// Redirection par défaut
+// Page d'accueil -> redirige selon l'authentification
 app.get('/', (req, res) => {
-  if (req.session.user && req.session.user.role === 'admin') {
-    res.redirect('/admin/dashboard');
-  } else if (req.session.user) {
-    res.redirect('/user/dashboard');
-  } else {
-    res.redirect('/login');
+  if (req.session.user) {
+    if (req.session.user.role === 'admin') {
+      return res.redirect('/admin/dashboard');
+    } else {
+      return res.redirect('/user/dashboard');
+    }
   }
+  res.redirect('/login');
 });
 
-// Pages d’erreur
+// Gestion erreurs 404
 app.use((req, res) => {
   res.status(404).render('errors/404.html');
 });
 
-app.use((err, req, res, next) => {
-  console.error('❌ Erreur serveur :', err.stack);
-  res.status(500).render('errors/500.html');
-});
-
-// Démarrage
+// Démarrage du serveur
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 LORD OBITO PANEL en ligne sur http://localhost:${PORT}`);
 });
