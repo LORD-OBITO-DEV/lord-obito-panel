@@ -1,6 +1,8 @@
+// routes/admin.js
+
 const express = require('express');
 const router = express.Router();
-const { isAdmin, isAuthenticated } = require('../middlewares/auth');
+const { isAdmin } = require('../middlewares/auth');
 const User = require('../models/User');
 const Panel = require('../models/Panel');
 
@@ -36,12 +38,11 @@ router.post('/create-panel', isAdmin, async (req, res) => {
   try {
     const { panelName, storageLimit, cpuLimit, duration, username, password } = req.body;
 
-    // Créer un nouveau panneau avec les données reçues
     const newPanel = new Panel({
       name: panelName,
-      storageLimit, // Go ou "illimité"
-      cpuLimit,     // nombre ou "illimité"
-      duration,     // ex: 7j, 1mois
+      storageLimit,
+      cpuLimit,
+      duration,
       username,
       password,
       createdBy: req.session.user._id
